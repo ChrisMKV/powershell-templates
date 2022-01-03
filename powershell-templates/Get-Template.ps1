@@ -6,8 +6,6 @@ function Get-Template {
 	Describe the function in more detail.
 	.EXAMPLE
 	Give an example of how to use it.
-	.PARAMETER paramName
-	Describe the function parameter here.
 	.NOTES
 	Author : ChrisMKV
 	V1.0 2017-08-05 Initial Version
@@ -18,6 +16,7 @@ function Get-Template {
 
 	param
 	(
+		#Describe the function parameter here.
 		[parameter(Mandatory, ValueFromPipeline)]
 		[string]$ExampleParameter
 	)
