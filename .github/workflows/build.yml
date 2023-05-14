@@ -23,14 +23,15 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       # Install PSScriptAnalyzer
-      - name: Install PSScriptAnalyzer from PSGallery
+      - name: Install PSScriptAnalyzer and Pester from PSGallery
         shell: pwsh
         run : |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PSScriptAnalyzer -Force
+          Install-Module Pester -Force
 
       # Run PSScriptAnalyzer
       - name: Run PSScriptAnalyzer
@@ -42,3 +43,9 @@ jobs:
           $Informational = $Issues.Where( { $_.Severity -eq 'Information' })
           if ($errors) { Throw "Errors: $($Errors.Count) `nWarnings: $($Warnings.Count) `nInformational: $($Informational.Count)" }
           else { Write-Output "Errors: $($Errors.Count) `nWarnings: $($Warnings.Count) `nInformational: $($Informational.Count)" }
+
+      # Run Pester
+      - name: Run Pester
+        shell: pwsh
+        run : |
+          Invoke-Pester
