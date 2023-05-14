@@ -22,6 +22,7 @@ function Get-Template {
 	)
 
 	BEGIN {
+		Start-Transcript -Path ([System.IO.Path]::ChangeExtension((Join-Path -Path $env:Temp -ChildPath $MyInvocation.MyCommand.Name),'log')) -ErrorAction Continue
 		Write-Debug -Message "$(Get-Date -Format s) | Call Function: $($MyInvocation.MyCommand)"
 	}
 
@@ -36,6 +37,7 @@ function Get-Template {
 		} catch {
 			$PSCmdlet.ThrowTerminatingError($PSitem)
 		} finally {
+			Stop-Transcript -ErrorAction Continue
 		}
 	}
 
