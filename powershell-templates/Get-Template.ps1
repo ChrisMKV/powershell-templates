@@ -1,46 +1,36 @@
-function Get-Template {
-	<#
-	.SYNOPSIS
-	Describe the function here.
-	.DESCRIPTION
-	Describe the function in more detail.
-	.EXAMPLE
-	Give an example of how to use it.
-	.NOTES
-	Author : ChrisMKV
-	V1.0 2017-08-05 Initial Version
-	#>
+function Get-Template{
+    <#
+    .SYNOPSIS
+    .DESCRIPTION
+    .EXAMPLE
+    .NOTES
+    Author : ChrisMKV
+    #>
 
-	#Requires -Version 5.1
-	[CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    #Requires -Version 5.1
+    # Remove SupportsShouldProcess for read-only (Get-*) functions
+    [CmdletBinding(SupportsShouldProcess, ConfirmImpact = 'Medium')]
+    param(
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
+        [string]$ExampleParameter
+    )
 
-	param
-	(
-		#Describe the function parameter here.
-		[parameter(Mandatory, ValueFromPipeline)]
-		[string]$ExampleParameter
-	)
+    $fn = $MyInvocation.MyCommand.Name
+    Write-Verbose "$fn : Start"
 
-	BEGIN {
-		Start-Transcript -Path ([System.IO.Path]::ChangeExtension((Join-Path -Path $env:Temp -ChildPath $MyInvocation.MyCommand.Name),'log')) -ErrorAction Continue
-		Write-Debug -Message "$(Get-Date -Format s) | Call Function: $($MyInvocation.MyCommand)"
-	}
+    try {
+        if ($PSCmdlet.ShouldProcess($ExampleParameter, 'WhatIsItDoing')) {
+            # work goes here
+            $ExampleParameter
+        }
+    }
+    catch {
+        $MyErrorMessage = "$fn failed: $($_.Exception.Message)"
+        $MyErrorRecord  = [System.Management.Automation.ErrorRecord]::new([System.Management.Automation.RuntimeException]::new($MyErrorMessage, $_.Exception),"$fn.Failed",$_.CategoryInfo.Category,$null)
+        $MyErrorRecord.ErrorDetails = "$MyErrorMessage`n--- Inner ScriptStackTrace ---`n$($_.ScriptStackTrace)"
+        $PSCmdlet.ThrowTerminatingError($MyErrorRecord)
+    }
 
-	PROCESS {
-		try {
-			if ($PSCmdlet.ShouldProcess($ExampleParameter, 'WhatIsItDoing')) {
-				Write-Output -InputObject "$ExampleParameter"
-
-
-
-			}
-		} catch {
-			$PSCmdlet.ThrowTerminatingError($PSitem)
-		} finally {
-			Stop-Transcript -ErrorAction Continue
-		}
-	}
-
-	END {
-	}
+    Write-Verbose "$fn : End"
 }
